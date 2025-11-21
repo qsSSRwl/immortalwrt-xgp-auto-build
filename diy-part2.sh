@@ -1,20 +1,25 @@
-#!/bin/bash
-# -----------------------------------------------------------------------------
-# TurboACC 集成脚本
-# 作用: 下载并执行 turboacc 源码安装脚本
-# -----------------------------------------------------------------------------
-
-echo "Running diy-part2.sh to install TurboACC..."
-
-# 1. 下载并执行 TurboACC 安装脚本
-# 注意：这会修改 firewall4, nftables 等核心组件，请确保没有其他脚本冲突
-curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh
-
-# 2. (可选) 强制在 .config 中启用插件
-# 如果你不希望在 menuconfig 手动勾选，可以取消下面几行的注释
-# echo "CONFIG_PACKAGE_luci-app-turboacc=y" >> .config
-# echo "CONFIG_PACKAGE_luci-app-turboacc-include-bbr-cca=y" >> .config
-# echo "CONFIG_PACKAGE_luci-app-turboacc-include-shortcut-fe=y" >> .config
-# echo "CONFIG_PACKAGE_luci-app-turboacc-include-pdnsd=y" >> .config
-
-echo "TurboACC installation script finished."
+# ---- turboacc 自动添加（可控） ----
+# 默认不启用。要启用请在 GitHub Actions secrets/env 添加 ADD_TURBOACC=1
+# 如果想禁用 SFE（软件流量分载），在 env 中加 ADD_TURBOACC_NO_SFE=1
+if [ "${ADD_TURBOACC:-0}" = "1" ]; then
+  echo ">>> ADD_TURBOACC=1 detected — 自动下载并运行 chenmozhijin/turboacc 的 add_turboacc.sh"
+  TMP_SCRIPT="$(mktemp -t add_turboacc.XXXXXX.sh)"
+  if curl -fsSL "https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh" -o "${TMP_SCRIPT}"; then
+    chmod +x "${TMP_SCRIPT}"
+    # 是否传入 --no-sfe
+    if [ "${ADD_TURBOACC_NO_SFE:-0}" = "1" ]; then
+      echo ">>> 以 --no-sfe 模式运行 add_turboacc.sh"
+      bash "${TMP_SCRIPT}" --no-sfe || { echo "ERROR: add_turboacc.sh 返回非零状态"; rm -f "${TMP_SCRIPT}"; exit 1; }
+    else
+      echo ">>> 以默认（含 sfe）模式运行 add_turboacc.sh"
+      bash "${TMP_SCRIPT}" || { echo "ERROR: add_turboacc.sh 返回非零状态"; rm -f "${TMP_SCRIPT}"; exit 1; }
+    fi
+    rm -f "${TMP_SCRIPT}"
+  else
+    echo "ERROR: 无法下载 add_turboacc.sh (curl 失败)"
+    exit 1
+  fi
+else
+  echo "ADD_TURBOACC 未启用（或为0），跳过 turboacc 自动安装步骤。"
+fi
+# ---- end turboacc 自动添加 ----
