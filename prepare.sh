@@ -11,30 +11,17 @@ if [ -d "lede" ]; then
     git pull || { echo "git pull failed"; exit 1; }
 else
     echo "repo dir not exists"
-    git clone "https://github.com/coolsnowwolf/lede.git" || { echo "git clone failed"; exit 1; }
+    git clone "https://github.com/immortalwrt/immortalwrt.git" || { echo "git clone failed"; exit 1; }
     cd lede
 fi
 
 cat feeds.conf.default > feeds.conf
 echo "" >> feeds.conf
+echo "src-git smpackage https://github.com/kenzok8/small-package.git;main" >> feeds.conf
 echo "src-git qmodem https://github.com/FUjr/QModem.git;main" >> feeds.conf
 #echo "src-git qmodem https://github.com/zzzz0317/QModem.git;stable202508" >> feeds.conf
 rm -rf files
 cp -r ../files .
-if [ -d "package/zz/luci-app-argon-config" ]; then
-    cd package/zz/luci-app-argon-config
-    git pull || { echo "luci-app-argon-config git pull failed"; exit 1; }
-    cd ../../..
-else
-    git clone https://github.com/jerrykuku/luci-app-argon-config.git package/zz/luci-app-argon-config || { echo "luci-app-argon-config git clone failed"; exit 1; }
-fi
-if [ -d "package/zz/luci-theme-alpha" ]; then
-    cd package/zz/luci-theme-alpha
-    git pull || { echo "luci-theme-alpha git pull failed"; exit 1; }
-    cd ../../..
-else
-    git clone https://github.com/derisamedia/luci-theme-alpha.git package/zz/luci-theme-alpha || { echo "luci-theme-alpha git clone failed"; exit 1; }
-fi
 if [ -d "package/zz/kmod-fb-tft-gc9307" ]; then
     cd package/zz/kmod-fb-tft-gc9307
     git pull || { echo "kmod-fb-tft-gc9307 git pull failed"; exit 1; }
