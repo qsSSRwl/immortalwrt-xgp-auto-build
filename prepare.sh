@@ -4,9 +4,9 @@ df -h
 free -h
 cat /proc/cpuinfo
 
-if [ -d "lede" ]; then
+if [ -d "immortalwrt" ]; then
     echo "repo dir exists"
-    cd lede
+    cd immortalwrt
     git reset --hard
     git pull || { echo "git pull failed"; exit 1; }
 else
