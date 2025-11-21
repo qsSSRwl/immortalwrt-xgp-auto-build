@@ -1,5 +1,14 @@
 #!/bin/bash
-cd lede
+cd immortalwrt
+# ---------------------------------------------------------
+# Add TurboACC (自动安装 TurboACC 加速插件)
+# ---------------------------------------------------------
+echo "Executing TurboACC installation script..."
+curl -sSL [https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh](https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh) -o add_turboacc.sh && bash add_turboacc.sh
+
+# 修正权限（可选，防止脚本无执行权限）
+chmod +x add_turboacc.sh
+
 echo "update feeds"
 ./scripts/feeds update -a || { echo "update feeds failed"; exit 1; }
 echo "install feeds"
