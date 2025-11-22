@@ -12,7 +12,7 @@ if [ -d "immortalwrt" ]; then
 else
     echo "repo dir not exists"
     git clone "https://github.com/immortalwrt/immortalwrt.git" || { echo "git clone failed"; exit 1; }
-    cd lede
+    cd immortalwrt
 fi
 
 cat feeds.conf.default > feeds.conf
