@@ -89,4 +89,4 @@ fi
 echo "make download"
 make download -j8 || { echo "download failed"; exit 1; }
 echo "make lede"
-make V=0 -j$(nproc) || { echo "make failed"; exit 1; }
+make -j1 V=s || { echo "make failed"; exit 1; }
