@@ -52,7 +52,7 @@ jobs:
             immortalwrt/dl
             immortalwrt/staging_dir
 #            immortalwrt/build_dir
-          key: ${{ runner.os }}-openwrt-${{ hashFiles('lede/feeds.conf.default', 'xgp.config') }}
+          key: ${{ runner.os }}-openwrt-${{ hashFiles('immortalwrt/feeds.conf.default', 'xgp.config') }}
       - name: Build
         run: |
           ./build.sh
@@ -66,7 +66,7 @@ jobs:
           cp immortalwrt/bin/targets/rockchip/armv8/profiles.json release_assets/ || true
           cp immortalwrt/bin/targets/rockchip/armv8/version.buildinfo release_assets/ || true
           cp immortalwrt/bin/targets/rockchip/armv8/sha256sums release_assets/ || true
-          bash -c "cd lede && git log -n 30" > release_assets/recent_git.log
+          bash -c "cd immortalwrt && git log -n 30" > release_assets/recent_git.log
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -111,7 +111,7 @@ jobs:
           RELEASE_DATE=$(date '+%Y-%m-%d %H:%M:%S')
           VERSION=$(cat release_assets/version.buildinfo | grep '^r' | head -n 1)
           echo "RELEASE_TITLE=${RELEASE_DATE} - ${VERSION}" >> $GITHUB_OUTPUT
-          image_prefix=LEDE-zzXGPv3-${current_date}${current_time}-
+          image_prefix=immortalwrt-rockchip-armv8-nlnet_xiguapi-v3-${current_date}${current_time}-
           echo "IMAGE_PREFIX=${image_prefix}" >> $GITHUB_OUTPUT
           cat release_header.md > release_info.md
           echo "" >> release_info.md
@@ -125,7 +125,7 @@ jobs:
               echo "</details>" >> release_info.md
           fi
           echo "<details>" >> release_info.md
-          echo "<summary>LEDE最近变更</summary>" >> release_info.md
+          echo "<summary>immortalwrt最近变更</summary>" >> release_info.md
           echo "" >> release_info.md
           echo "\`\`\`" >> release_info.md
           cat release_assets/recent_git.log >> release_info.md
