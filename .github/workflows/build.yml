@@ -133,14 +133,6 @@ jobs:
           echo "" >> release_info.md
           echo "</details>" >> release_info.md
           echo "<details>" >> release_info.md
-          echo "<summary>内置软件包列表</summary>" >> release_info.md
-          echo "" >> release_info.md
-          echo "\`\`\`" >> release_info.md
-          cat release_assets/openwrt-rockchip-armv8-nlnet_xiguapi-v3.manifest >> release_info.md
-          echo "\`\`\`" >> release_info.md
-          echo "" >> release_info.md
-          echo "</details>" >> release_info.md
-          echo "<details>" >> release_info.md
           echo "<summary>文件哈希</summary>" >> release_info.md
           echo "" >> release_info.md
           echo "\`\`\`" >> release_info.md
@@ -164,7 +156,6 @@ jobs:
           body_path: release_info.md
           files: |
             release_assets/*.img.gz
-            release_assets/openwrt-rockchip-armv8-nlnet_xiguapi-v3.manifest
             release_assets/config.buildinfo
             release_assets/feeds.buildinfo
             release_assets/profiles.json
